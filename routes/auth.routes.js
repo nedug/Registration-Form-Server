@@ -6,7 +6,6 @@ import config from 'config';
 import jwt from 'jsonwebtoken';
 
 
-
 export const authRouter = new Router();
 
 authRouter.post('/registration',
