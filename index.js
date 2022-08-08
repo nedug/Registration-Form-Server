@@ -1,11 +1,16 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import config from 'config';
+import { authRouter } from './routes/auth.routes.js';
 
 
 const app = express(); /* Создаем приложение */
 
 const PORT = config.get('serverPort'); /* Получааем порт */
+
+
+app.use(express.json()); /* Работаем с JSON */
+app.use('/api/auth', authRouter); /* Обрабатываем роуты /api/auth */
 
 
 const start = async () => {
