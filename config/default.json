@@ -1,3 +1,4 @@
 {
-  "serverPort": 5000
+  "serverPort": 5000,
+  "dbURL": "mongodb+srv://nedug:2425Mon@mern-cloud.h2pc1gd.mongodb.net/?retryWrites=true&w=majority"
 }
