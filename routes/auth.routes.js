@@ -29,12 +29,12 @@ authRouter.post('/registration',
                 return res.status(400).json({ message: `User with email ${email} already exist` });
             }
 
-            const hashPassword = await bcrypt.hash(password, 8); /* Кодируем пароль  */
+            const hashPassword = await bcrypt.hash(password, 8); /* Кодируем пароль */
+
             const user = new User({ email, password: hashPassword }); /* Создадим пользовтеля */
             await user.save(); /* Сохраним пользовтеля */
 
             return res.json({ message: 'User was created' }); /* Ответ сервера на клиент */
-
         } catch (e) {
             console.log(e);
             res.send({ message: 'Server error' });
