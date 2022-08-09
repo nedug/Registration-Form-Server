@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { check, validationResult } from 'express-validator';
 import config from 'config';
 import jwt from 'jsonwebtoken';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 
 export const authRouter = new Router();
@@ -61,10 +62,34 @@ authRouter.post('/login',
                 return res.status(400).json({ message: 'Invalid password' });
             }
 
-            /* Создаем токен JWT  */
+            /* Создаем токен JWT */
             const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
 
-            return res.json({ /* Возвращаем пользовател с токеном на клиент */
+            return res.json({ /* Возвращаем пользовател с Токеном на клиент */
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    diskSpace: user.diskSpace,
+                    usedSpace: user.usedSpace,
+                    avatar: user.avatar,
+                },
+            });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: 'Server error' });
+        }
+    });
+
+
+authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware */
+    async (req, res) => {
+        try {
+            const user = await User.findOne({ _id: req.user.id }); /* Найдем пользователя по id из токена */
+
+            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' }); /* Пересоздаем ТОКЕН */
+
+            return res.json({ /* Возвращаем пользовател с Токеном на клиент */
                 token,
                 user: {
                     id: user.id,
