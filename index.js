@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import express from 'express';
 import config from 'config';
 import { authRouter } from './routes/auth.routes.js';
-import { fileRouter } from './routes/file.routes.js';
 import { corsMiddleware } from './middleware/cors.middleware.js';
 
 
@@ -13,7 +12,6 @@ const PORT = config.get('serverPort'); /* Получааем порт */
 app.use(corsMiddleware); /* CORS */
 app.use(express.json()); /* Работаем с JSON */
 app.use('/api/auth', authRouter); /* Обрабатываем роуты /api/auth */
-app.use('/api/files', fileRouter); /* Обрабатываем роуты /api/files */
 
 
 const start = async () => {
