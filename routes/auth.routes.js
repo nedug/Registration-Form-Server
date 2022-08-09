@@ -1,10 +1,12 @@
 import Router from 'express';
 import { User } from '../models/User.js';
+import { File } from '../models/File.js';
 import bcrypt from 'bcryptjs';
 import { check, validationResult } from 'express-validator';
 import config from 'config';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware/auth.middleware.js';
+import { fileService } from '../services/fileService.js';
 
 
 export const authRouter = new Router();
@@ -36,6 +38,8 @@ authRouter.post('/registration',
 
             const user = new User({ email, password: hashPassword }); /* Создадим пользовтеля */
             await user.save(); /* Сохраним пользовтеля */
+
+            await fileService.createDir(new File({ user: user.id, name: '' })); /* Создаем папку */
 
             return res.json({ message: 'User was created' }); /* Ответ сервера на клиент */
         } catch (e) {
