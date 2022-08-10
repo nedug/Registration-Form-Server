@@ -167,6 +167,7 @@ authRouter.patch('/change',
                     email: user.email,
                     date: user.date,
                     dateLogin: user.dateLogin,
+                    isSaveSession: user.isSaveSession,
                 },
             });
         } catch (e) {
