@@ -127,3 +127,38 @@ authRouter.delete('/delete', authMiddleware, /* Подключаем Middleware 
             res.status(500).send({ message: 'Server error' });
         }
     });
+
+
+authRouter.patch('/change',
+    async (req, res) => {
+        try {
+            const { email, newPassword } = req.body;/* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
+
+            const user = await User.findOne({ email });  /* Ищем ИМЕЙЛ в базе данных */
+
+            if (!user) { /* Проверка если пользователь нe найден */
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const hashNewPassword = await bcrypt.hash(newPassword, 8); /* Кодируем пароль */
+            user.password = hashNewPassword;
+
+            await user.save(); /* Сохраним пользовтеля */
+
+            // /* Создаем токен JWT */
+            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
+
+            return res.json({ /* Возвращаем пользовател с Токеном на клиент */
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    date: user.date,
+                    dateLogin: user.dateLogin,
+                },
+            });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: 'Server error' });
+        }
+    });
