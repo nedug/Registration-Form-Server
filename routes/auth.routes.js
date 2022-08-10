@@ -34,10 +34,10 @@ authRouter.post('/registration',
 
             const hashPassword = await bcrypt.hash(password, 8); /* Кодируем пароль */
 
-            const user = new User({ email, password: hashPassword }); /* Создадим пользовтеля */
-            await user.save(); /* Сохраним пользовтеля */
+            const user = new User({ email, password: hashPassword }); /* Создадим пользователя */
+            await user.save(); /* Сохраним пользователя */
 
-            return res.json({ message: 'User was created' }); /* Ответ сервера на клиент */
+            return res.json({ message: `User ${email} was created` }); /* Ответ сервера на клиент */
         } catch (e) {
             console.log(e);
             res.send({ message: 'Server error' });
@@ -52,9 +52,12 @@ authRouter.post('/login',
 
             const user = await User.findOne({ email });  /* Ищем ИМЕЙЛ в базе данных */
 
-            if (!user) { /* Проверка если пользователь нн найден */
+            if (!user) { /* Проверка если пользователь нe найден */
                 return res.status(404).json({ message: 'User not found' });
             }
+
+            user.dateLogin = new Date();
+            await user.save(); /* Сохраним пользовтеля */
 
             const isPassValid = bcrypt.compareSync(password, user.password); /* Сравниваем пароль с запроса и Базы Данных */
 
@@ -70,9 +73,8 @@ authRouter.post('/login',
                 user: {
                     id: user.id,
                     email: user.email,
-                    diskSpace: user.diskSpace,
-                    usedSpace: user.usedSpace,
-                    avatar: user.avatar,
+                    date: user.date,
+                    dateLogin: user.dateLogin,
                 },
             });
         } catch (e) {
@@ -87,6 +89,8 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware */
         try {
             const user = await User.findOne({ _id: req.user.id }); /* Найдем пользователя по id из токена */
 
+            console.log(user);
+
             const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' }); /* Пересоздаем ТОКЕН */
 
             return res.json({ /* Возвращаем пользовател с Токеном на клиент */
@@ -94,9 +98,8 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware */
                 user: {
                     id: user.id,
                     email: user.email,
-                    diskSpace: user.diskSpace,
-                    usedSpace: user.usedSpace,
-                    avatar: user.avatar,
+                    date: user.date,
+                    dateLogin: user.dateLogin,
                 },
             });
         } catch (e) {
