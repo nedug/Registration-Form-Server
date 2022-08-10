@@ -21,7 +21,7 @@ authRouter.post('/registration',
 
             const errors = validationResult(req); /* Валидация данных */
             if (!errors.isEmpty()) {
-                return res.status(400).json({ message: 'Uncorrected request', errors });
+                return res.status(400).json({ message: errors.errors[0].msg });
             }
 
             const { email, password } = req.body; /* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
@@ -84,7 +84,7 @@ authRouter.post('/login',
     });
 
 
-authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware */
+authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware для раскодировки ТОКЕНА */
     async (req, res) => {
         try {
             const user = await User.findOne({ _id: req.user.id }); /* Найдем пользователя по id из токена */
@@ -105,5 +105,25 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware */
         } catch (e) {
             console.log(e);
             res.send({ message: 'Server error' });
+        }
+    });
+
+
+authRouter.delete('/delete', authMiddleware, /* Подключаем Middleware для раскодировки ТОКЕНА */
+    async (req, res) => {
+        try {
+            const user = await User.findByIdAndRemove({ _id: req.user.id }); /* Удаляем пользователя */
+
+            console.log(user);
+
+            return res.json({ /* Возвращаем пользовател с Токеном на клиент */
+                user: {
+                    id: user.id,
+                    email: user.email,
+                },
+            });
+        } catch (e) {
+            console.log(e);
+            res.status(500).send({ message: 'Server error' });
         }
     });

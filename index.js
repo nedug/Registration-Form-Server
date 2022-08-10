@@ -12,6 +12,7 @@ const PORT = config.get('serverPort'); /* Получааем порт */
 app.use(corsMiddleware); /* CORS */
 app.use(express.json()); /* Работаем с JSON */
 app.use('/api/auth', authRouter); /* Обрабатываем роуты /api/auth */
+app.use('/api/delete', authRouter); /* Обрабатываем роуты /api/delete */
 
 
 const start = async () => {
