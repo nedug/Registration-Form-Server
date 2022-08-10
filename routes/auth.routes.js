@@ -48,15 +48,16 @@ authRouter.post('/registration',
 authRouter.post('/login',
     async (req, res) => {
         try {
-            const { email, password } = req.body;/* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
+            const { email, password, checkbox } = req.body; /* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
 
-            const user = await User.findOne({ email });  /* Ищем ИМЕЙЛ в базе данных */
+            const user = await User.findOne({ email }); /* Ищем ИМЕЙЛ в базе данных */
 
             if (!user) { /* Проверка если пользователь нe найден */
                 return res.status(404).json({ message: 'User not found' });
             }
 
             user.dateLogin = new Date();
+            user.isSaveSession = checkbox;
             await user.save(); /* Сохраним пользовтеля */
 
             const isPassValid = bcrypt.compareSync(password, user.password); /* Сравниваем пароль с запроса и Базы Данных */
@@ -75,6 +76,7 @@ authRouter.post('/login',
                     email: user.email,
                     date: user.date,
                     dateLogin: user.dateLogin,
+                    isSaveSession: user.isSaveSession,
                 },
             });
         } catch (e) {
@@ -100,6 +102,7 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware дл
                     email: user.email,
                     date: user.date,
                     dateLogin: user.dateLogin,
+                    isSaveSession: user.isSaveSession,
                 },
             });
         } catch (e) {

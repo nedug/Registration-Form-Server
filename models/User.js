@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     date: { type: Date, default: Date.now },
     dateLogin: { type: Date },
+    isSaveSession: { type: Boolean, default: false },
 });
 
 export const User = mongoose.model('User', userSchema);
