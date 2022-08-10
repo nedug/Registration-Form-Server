@@ -130,8 +130,17 @@ authRouter.delete('/delete', authMiddleware, /* Подключаем Middleware 
 
 
 authRouter.patch('/change',
+    [
+        check('newPassword', 'Password must be longer than 3 and shorter than 12')
+            .isLength({ min: 3, max: 10 }),
+    ],
     async (req, res) => {
         try {
+            const errors = validationResult(req); /* Валидация данных */
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ message: errors.errors[0].msg });
+            }
+
             const { email, newPassword } = req.body;/* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
 
             const user = await User.findOne({ email });  /* Ищем ИМЕЙЛ в базе данных */
