@@ -7,7 +7,7 @@ import { corsMiddleware } from './middleware/cors.middleware.js';
 
 const app = express(); /* Создаем приложение */
 
-const PORT = config.get('serverPort'); /* Получааем порт */
+const PORT = process.env.PORT || config.get('serverPort'); /* Получааем порт */
 
 
 app.use(corsMiddleware); /* CORS */
