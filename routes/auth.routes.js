@@ -46,7 +46,17 @@ authRouter.post('/registration',
 
 
 authRouter.post('/login',
+    [
+        check('email', 'Uncorrected email').isEmail(),
+        check('password', 'Password min 3 and max 12 symbols')
+            .isLength({ min: 3, max: 10 }),
+    ],
     async (req, res) => {
+        const errors = validationResult(req); /* Валидация данных */
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ message: errors.errors[0].msg });
+        }
+
         try {
             const { email, password, checkbox } = req.body; /* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
 
@@ -145,7 +155,6 @@ authRouter.patch('/change',
             if (!errors.isEmpty()) {
                 return res.status(400).json({ message: errors.errors[0].msg });
             }
-
             const { email, newPassword } = req.body;/* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
 
             const user = await User.findOne({ email });  /* Ищем ИМЕЙЛ в базе данных */
