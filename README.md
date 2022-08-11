@@ -1,9 +1,13 @@
-# Server for MERN Cloud-Disk
+# Server for MERN User Registration Form
 
 ***
 
-* User registration 
+* User registration on MongoDB
 * User Login + JWT
+* User Profile
+* Create notes
+* Change password
+* Remove user
 
 ***
 
@@ -18,4 +22,10 @@ Technologies and libraries in development:
 
 ***
 
-[Demo version on Github Pages](https://nedug.github.io/cv-alexander-r/)
+[Demo version on Github Pages](https://nedug.github.io/Mern-cloud-disk-Client/)
+
+[Code Client Part](https://github.com/nedug/Mern-cloud-disk-Client)
+
+***
+
+![](https://github.com/nedug/cv-alexander-r/blob/main/src/common/img/Form.jpg?raw=true)
