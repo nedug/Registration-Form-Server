@@ -178,14 +178,22 @@ authRouter.patch('/change',
 
 
 authRouter.post('/notes', authMiddleware, /* Подключаем Middleware для раскодировки ТОКЕНА */
+    [
+        check('notes', 'min 1 symbol')
+            .isLength({ min: 1, max: 50 }),
+    ],
     async (req, res) => {
         try {
+            const errors = validationResult(req); /* Валидация данных */
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ message: errors.errors[0].msg });
+            }
 
             const { notes } = req.body;
 
             const user = await User.findOne({ _id: req.user.id });
 
-            user.notes = notes;
+            user.notes.push(notes);
             await user.save(); /* Сохраним пользовтеля */
 
             console.log(user);
