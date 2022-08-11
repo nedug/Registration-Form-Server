@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     date: { type: Date, default: Date.now },
     dateLogin: { type: Date },
+    notes: { type: String },
     isSaveSession: { type: Boolean, default: false },
 });
 

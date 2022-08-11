@@ -175,3 +175,37 @@ authRouter.patch('/change',
             res.send({ message: 'Server error' });
         }
     });
+
+
+authRouter.post('/notes', authMiddleware, /* Подключаем Middleware для раскодировки ТОКЕНА */
+    async (req, res) => {
+        try {
+
+            const { notes } = req.body;
+
+            const user = await User.findOne({ _id: req.user.id });
+
+            user.notes = notes;
+            await user.save(); /* Сохраним пользовтеля */
+
+            console.log(user);
+
+            // /* Создаем токен JWT */
+            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
+
+            return res.json({ /* Возвращаем пользовател с Токеном на клиент */
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    date: user.date,
+                    dateLogin: user.dateLogin,
+                    isSaveSession: user.isSaveSession,
+                    notes: user.notes,
+                },
+            });
+        } catch (e) {
+            console.log(e);
+            res.status(500).send({ message: 'Server error' });
+        }
+    });
