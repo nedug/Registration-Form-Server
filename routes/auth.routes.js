@@ -12,7 +12,7 @@ export const authRouter = new Router();
 authRouter.post('/registration',
     [
         check('email', 'Uncorrected email').isEmail(),
-        check('password', 'Password must be longer than 3 and shorter than 12')
+        check('password', 'Password min 3 and max 12 symbols')
             .isLength({ min: 3, max: 10 }),
     ],
     async (req, res) => {
@@ -76,6 +76,7 @@ authRouter.post('/login',
                     email: user.email,
                     date: user.date,
                     dateLogin: user.dateLogin,
+                    notes: user.notes,
                     isSaveSession: user.isSaveSession,
                 },
             });
@@ -102,6 +103,7 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware дл
                     email: user.email,
                     date: user.date,
                     dateLogin: user.dateLogin,
+                    notes: user.notes,
                     isSaveSession: user.isSaveSession,
                 },
             });
@@ -134,7 +136,7 @@ authRouter.delete('/delete', authMiddleware, /* Подключаем Middleware 
 
 authRouter.patch('/change',
     [
-        check('newPassword', 'Password must be longer than 3 and shorter than 12')
+        check('newPassword', 'Password min 3 and max 12 symbols')
             .isLength({ min: 3, max: 10 }),
     ],
     async (req, res) => {
@@ -166,6 +168,7 @@ authRouter.patch('/change',
                     id: user.id,
                     email: user.email,
                     date: user.date,
+                    notes: user.notes,
                     dateLogin: user.dateLogin,
                     isSaveSession: user.isSaveSession,
                 },
@@ -180,7 +183,9 @@ authRouter.patch('/change',
 authRouter.post('/notes', authMiddleware, /* Подключаем Middleware для раскодировки ТОКЕНА */
     [
         check('notes', 'min 1 symbol')
-            .isLength({ min: 1, max: 50 }),
+            .isLength({ min: 1 }),
+        check('notes', 'max 50 symbos')
+            .isLength({ max: 50 }),
     ],
     async (req, res) => {
         try {
