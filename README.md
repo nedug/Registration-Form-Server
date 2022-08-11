@@ -18,6 +18,7 @@ Technologies and libraries in development:
 - MongoDB + mongoose
 - jsonwebtoken + bcryptjs
 - nodemon
+- deploy on HEROKU cloud
 ```
 
 ***
