@@ -3,7 +3,7 @@
 ***
 
 * User registration on MongoDB
-* User Login + JWT
+* User Login + JWT Token
 * User Profile
 * Create notes
 * Change password
