@@ -9,6 +9,7 @@ const app = express(); /* Создаем приложение */
 
 const PORT = config.get('serverPort'); /* Получааем порт */
 
+
 app.use(corsMiddleware); /* CORS */
 app.use(express.json()); /* Работаем с JSON */
 app.use('/api/auth', authRouter); /* Обрабатываем роуты /api/auth */
@@ -18,13 +19,7 @@ app.use('/api/notes', authRouter); /* Обрабатываем роуты /api/n
 
 const start = async () => {
     try {
-        await new mongoose.connect(config.get('dbURL'), /* Обращаемся к MongoDB */
-            // {
-            //     useNewUrlParser: true,
-            //     useUnifiedTopology: true,
-            //     useCreateIndex: true,
-            // }
-        );
+        await new mongoose.connect(config.get('dbURL')); /* Обращаемся к MongoDB */
 
         app.listen(PORT, () => {
             console.log('Server started on port: ', PORT); /* Слушаем сервер на нужном порту */
