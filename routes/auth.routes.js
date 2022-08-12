@@ -84,7 +84,7 @@ authRouter.post('/login',
                 user: {
                     id: user.id,
                     email: user.email,
-                    date: user.date,
+                    dateAuth: user.dateAuth,
                     dateLogin: user.dateLogin,
                     notes: user.notes,
                     isSaveSession: user.isSaveSession,
@@ -111,7 +111,7 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware дл
                 user: {
                     id: user.id,
                     email: user.email,
-                    date: user.date,
+                    dateAuth: user.dateAuth,
                     dateLogin: user.dateLogin,
                     notes: user.notes,
                     isSaveSession: user.isSaveSession,
@@ -176,7 +176,7 @@ authRouter.patch('/change',
                 user: {
                     id: user.id,
                     email: user.email,
-                    date: user.date,
+                    dateAuth: user.dateAuth,
                     notes: user.notes,
                     dateLogin: user.dateLogin,
                     isSaveSession: user.isSaveSession,
@@ -220,7 +220,7 @@ authRouter.post('/notes', authMiddleware, /* Подключаем Middleware д�
                 user: {
                     id: user.id,
                     email: user.email,
-                    date: user.date,
+                    dateAuth: user.dateAuth,
                     dateLogin: user.dateLogin,
                     isSaveSession: user.isSaveSession,
                     notes: user.notes,
@@ -229,5 +229,33 @@ authRouter.post('/notes', authMiddleware, /* Подключаем Middleware д�
         } catch (e) {
             console.log(e);
             res.status(500).send({ message: 'Server error' });
+        }
+    });
+
+
+authRouter.get('/users', authMiddleware,  /* Подключаем Middleware для раскодировки ТОКЕНА */
+    async (req, res) => {
+        try {
+            const users = await User.find(); /* Найдем всех пользователей */
+
+            return res.json({
+                users,
+            });
+        } catch (e) {
+            console.log(e);
+            res.send({ message: 'Server error' });
+        }
+    });
+
+
+authRouter.delete('/removeUsers', authMiddleware,  /* Подключаем Middleware для раскодировки ТОКЕНА */
+    async (req, res) => {
+        try {
+            const users = await User.deleteMany({}); /* Удалим всех пользователей */
+
+            return res.json({ message: `All users were removed` }); /* Ответ сервера на клиент */
+        } catch (e) {
+            console.log(e);
+            res.send({ message: 'Server error' });
         }
     });
