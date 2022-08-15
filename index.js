@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import config from 'config';
 import { authRouter } from './routes/auth.routes.js';
-import { corsMiddleware } from './middleware/cors.middleware.js';
+import cors from 'cors';
 
 
 const app = express(); /* Создаем приложение */
@@ -10,13 +10,15 @@ const app = express(); /* Создаем приложение */
 const PORT = process.env.PORT || config.get('serverPort'); /* Получааем порт */
 
 
-app.use(corsMiddleware); /* CORS */
 app.use(express.json()); /* Работаем с JSON */
+// app.use(corsMiddleware); /* CORS */
+app.use(cors());
 app.use('/api/auth', authRouter); /* Обрабатываем роуты /api/auth */
 app.use('/api/delete', authRouter); /* Обрабатываем роуты /api/delete */
 app.use('/api/notes', authRouter); /* Обрабатываем роуты /api/notes */
 app.use('/api/users', authRouter); /* Обрабатываем роуты /api/users */
 app.use('/api/removeUsers', authRouter); /* Обрабатываем роуты /api/removeUsers */
+// app.use('/api/activate/:link', authRouter); /* Обрабатываем роуты /api/removeUsers */
 
 
 const start = async () => {
