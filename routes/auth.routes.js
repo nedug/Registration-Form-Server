@@ -41,7 +41,7 @@ authRouter.post('/registration',
             if (isNeedActivate) {
                 const activationLink = v4(); // v34fa-asfasf-142saf-sa-asf
                 const user = await User.create({ email, password: hashPassword, activationLink });
-                await mailService.sendActivationMail(email, `${process.env.API_URL}/api/auth//activate/${activationLink}`);
+                await mailService.sendActivationMail(email, `${process.env.API_URL}/api/auth/activate/${activationLink}`);
             } else {
                 const user = await User.create({ email, password: hashPassword, isActivated: true });
             }
@@ -96,7 +96,6 @@ authRouter.post('/login',
                     id: user.id,
                     email: user.email,
                     isActivated: user.isActivated,
-                    activationLink: user.activationLinkemail,
                     dateAuth: user.dateAuth,
                     dateLogin: user.dateLogin,
                     notes: user.notes,
@@ -147,7 +146,6 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware дл
                     id: user.id,
                     email: user.email,
                     isActivated: user.isActivated,
-                    activationLink: user.activationLinkemail,
                     dateAuth: user.dateAuth,
                     dateLogin: user.dateLogin,
                     notes: user.notes,
