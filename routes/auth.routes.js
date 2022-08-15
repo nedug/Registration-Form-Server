@@ -337,13 +337,15 @@ authRouter.post('/savePassword',
 
             const { code, password } = req.body; /* Получаем ИМЕЙЛ */
 
-            const user = await User.findOne({ code }); /* Ищем User в базе данных */
+            const user = await User.findOne({ restoreLink: code }); /* Ищем User в базе данных */
 
+            if (!user) { /* Проверка на наличие пользователя */
+                return res.status(400).json({ message: `Confirmation code is wrong` });
+            }
 
             const hashNewPassword = await bcrypt.hash(password, 8); /* Кодируем пароль */
             user.password = hashNewPassword;
             await user.save(); /* Сохраним пользовтеля */
-
 
             return res.json({ message: `New password successfully saved!` }); /* Ответ сервера на клиент */
         } catch (e) {
