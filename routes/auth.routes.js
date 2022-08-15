@@ -95,6 +95,7 @@ authRouter.post('/login',
                 user: {
                     id: user.id,
                     email: user.email,
+                    password: user.password,
                     isActivated: user.isActivated,
                     dateAuth: user.dateAuth,
                     dateLogin: user.dateLogin,
@@ -116,7 +117,7 @@ authRouter.get('/activate/:link',
 
             const activationLink = req.params.link;
 
-            const user = await User.findOne({activationLink});
+            const user = await User.findOne({ activationLink });
             if (!user) {
                 return res.status(404).json({ message: 'Incorrect activation link' });
             }
@@ -289,6 +290,62 @@ authRouter.delete('/removeUsers', authMiddleware,  /* Подключаем Middl
             const users = await User.deleteMany({}); /* Удалим всех пользователей */
 
             return res.json({ message: `All users were removed` }); /* Ответ сервера на клиент */
+        } catch (e) {
+            console.log(e);
+            res.send({ message: 'Server error' });
+        }
+    });
+
+
+authRouter.post('/restore',
+    async (req, res) => {
+        try {
+            const { email } = req.body; /* Получаем ИМЕЙЛ */
+
+            const user = await User.findOne({ email }); /* Ищем User в базе данных */
+
+            if (!user) { /* Проверка на наличие пользователя */
+                return res.status(400).json({ message: `User with email ${email} doesn't exist` });
+            }
+
+            const restoreLink = v4(); // v34fa-asfasf-142saf-sa-asf
+
+            user.restoreLink = restoreLink;
+            await user.save(); /* Сохраним пользовтеля */
+
+            await mailService.sendAConfirmationCode(email, `${restoreLink}`);
+
+
+            return res.json({ message: `An email with a confirmation code has been sent to your email!` }); /* Ответ сервера на клиент */
+        } catch (e) {
+            console.log(e);
+            res.send({ message: 'Server error' });
+        }
+    });
+
+
+authRouter.post('/savePassword',
+    check('code', 'Code should be 36 symbols').isLength({ min: 36, max: 36 }),
+    check('password', 'Password min 3 and max 12 symbols')
+        .isLength({ min: 3, max: 10 }),
+    async (req, res) => {
+        try {
+            const errors = validationResult(req); /* Валидация данных */
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ message: errors.errors[0].msg });
+            }
+
+            const { code, password } = req.body; /* Получаем ИМЕЙЛ */
+
+            const user = await User.findOne({ code }); /* Ищем User в базе данных */
+
+
+            const hashNewPassword = await bcrypt.hash(password, 8); /* Кодируем пароль */
+            user.password = hashNewPassword;
+            await user.save(); /* Сохраним пользовтеля */
+
+
+            return res.json({ message: `New password successfully saved!` }); /* Ответ сервера на клиент */
         } catch (e) {
             console.log(e);
             res.send({ message: 'Server error' });

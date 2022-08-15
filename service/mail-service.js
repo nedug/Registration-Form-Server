@@ -33,6 +33,22 @@ class MailService {
                 `,
         });
     }
+
+    async sendAConfirmationCode(to, code) {
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            to,
+            subject: 'Confirmation code',
+            text: '',
+            html:
+                `
+                    <div>
+                        <h1>Your password recovery confirmation code:</h1>
+                        <div>${code}</div>
+                    </div>
+                `,
+        });
+    }
 }
 
 export const mailService = new MailService();
