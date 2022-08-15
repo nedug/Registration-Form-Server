@@ -26,7 +26,7 @@ authRouter.post('/registration',
                 return res.status(400).json({ message: errors.errors[0].msg });
             }
 
-            const { email, password } = req.body; /* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
+            const { email, password, isNeedActivate } = req.body; /* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
 
             const candidate = await User.findOne({ email }); /* Ищем ИМЕЙЛ в базе данных */
 
@@ -38,12 +38,13 @@ authRouter.post('/registration',
 
             // const user = new User({ email, password: hashPassword }); /* Создадим пользователя */
 
-            const activationLink = v4(); // v34fa-asfasf-142saf-sa-asf
-
-            const user = await User.create({ email, password: hashPassword, activationLink });
-
-            await mailService.sendActivationMail(email, `${process.env.API_URL}/api/auth//activate/${activationLink}`);
-
+            if (isNeedActivate) {
+                const activationLink = v4(); // v34fa-asfasf-142saf-sa-asf
+                const user = await User.create({ email, password: hashPassword, activationLink });
+                await mailService.sendActivationMail(email, `${process.env.API_URL}/api/auth//activate/${activationLink}`);
+            } else {
+                const user = await User.create({ email, password: hashPassword, isActivated: true });
+            }
 
             // await user.save(); /* Сохраним пользователя */
 
