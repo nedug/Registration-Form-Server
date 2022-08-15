@@ -48,7 +48,7 @@ authRouter.post('/registration',
 
             // await user.save(); /* Сохраним пользователя */
 
-            return res.json({ message: `User ${email} was created` }); /* Ответ сервера на клиент */
+            return res.json({ message: `User ${email} was created! ${isNeedActivate ? 'Sending an email with a link usually takes a couple of minutes...' : ''}` }); /* Ответ сервера на клиент */
         } catch (e) {
             console.log(e);
             res.status(500).send({ message: 'Server error' });
@@ -114,52 +114,17 @@ authRouter.get('/activate/:link',
     async (req, res) => {
 
         try {
-            // const { email, password } = req.body; /* Получаем ИМЕЙЛ и ПАРОЛь из тела запроса */
-            //
-            // const user = await User.findOne({ email }); /* Ищем ИМЕЙЛ в базе данных */
-            //
-            // if (!user) { /* Проверка если пользователь нe найден */
-            //     return res.status(404).json({ message: 'User not found' });
-            // }
-
 
             const activationLink = req.params.link;
 
             const user = await User.findOne({activationLink});
             if (!user) {
-                return res.status(404).json({ message: 'Неккоректная ссылка активации' });
+                return res.status(404).json({ message: 'Incorrect activation link' });
             }
             user.isActivated = true;
             await user.save();
 
             return res.redirect(process.env.CLIENT_URL);
-
-
-
-            // user.dateLogin = new Date();
-            // user.isSaveSession = checkbox;
-            // await user.save(); /* Сохраним пользовтеля */
-            //
-            // const isPassValid = bcrypt.compareSync(password, user.password); /* Сравниваем пароль с запроса и Базы Данных */
-            //
-            // if (!isPassValid) { /* Проверка на корректный пароль */
-            //     return res.status(400).json({ message: 'Invalid password' });
-            // }
-            //
-            // /* Создаем токен JWT */
-            // const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
-            //
-            // return res.json({ /* Возвращаем пользовател с Токеном на клиент */
-            //     token,
-            //     user: {
-            //         id: user.id,
-            //         email: user.email,
-            //         dateAuth: user.dateAuth,
-            //         dateLogin: user.dateLogin,
-            //         notes: user.notes,
-            //         isSaveSession: user.isSaveSession,
-            //     },
-            // });
         } catch (e) {
             console.log(e);
             res.send({ message: 'Server error' });
