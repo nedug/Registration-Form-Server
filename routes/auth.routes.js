@@ -2,7 +2,7 @@ import Router from 'express';
 import { User } from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import { check, validationResult } from 'express-validator';
-import config from 'config';
+// import config from 'config';
 import { v4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware/auth.middleware.js';
@@ -88,7 +88,7 @@ authRouter.post('/login',
             }
 
             /* Создаем токен JWT */
-            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id }, process.env.secretKey, { expiresIn: '1h' });
 
             return res.json({ /* Возвращаем пользовател с Токеном на клиент */
                 token,
@@ -139,7 +139,7 @@ authRouter.get('/auth', authMiddleware,  /* Подключаем Middleware дл
 
             console.log(user);
 
-            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' }); /* Пересоздаем ТОКЕН */
+            const token = jwt.sign({ id: user.id }, process.env.secretKey, { expiresIn: '1h' }); /* Пересоздаем ТОКЕН */
 
             return res.json({ /* Возвращаем пользовател с Токеном на клиент */
                 token,
@@ -205,7 +205,7 @@ authRouter.patch('/change',
             await user.save(); /* Сохраним пользовтеля */
 
             // /* Создаем токен JWT */
-            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id }, process.env.secretKey, { expiresIn: '1h' });
 
             return res.json({ /* Возвращаем пользовател с Токеном на клиент */
                 token,
@@ -249,7 +249,7 @@ authRouter.post('/notes', authMiddleware, /* Подключаем Middleware д�
             console.log(user);
 
             // /* Создаем токен JWT */
-            const token = jwt.sign({ id: user.id }, config.get('secretKey'), { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id }, process.env.secretKey, { expiresIn: '1h' });
 
             return res.json({ /* Возвращаем пользовател с Токеном на клиент */
                 token,

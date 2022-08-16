@@ -1,13 +1,15 @@
 import mongoose from 'mongoose';
 import express from 'express';
-import config from 'config';
 import { authRouter } from './routes/auth.routes.js';
 import cors from 'cors';
+// import { config } from 'dotenv';
+
+// const startConfig = config();
 
 
 const app = express(); /* Создаем приложение */
 
-const PORT = process.env.PORT || config.get('serverPort'); /* Получааем порт */
+const PORT = process.env.PORT || 5000; /* Получааем порт */
 
 
 app.use(express.json()); /* Работаем с JSON */
@@ -18,12 +20,14 @@ app.use('/api/delete', authRouter); /* Обрабатываем роуты /api/
 app.use('/api/notes', authRouter); /* Обрабатываем роуты /api/notes */
 app.use('/api/users', authRouter); /* Обрабатываем роуты /api/users */
 app.use('/api/removeUsers', authRouter); /* Обрабатываем роуты /api/removeUsers */
-// app.use('/api/activate/:link', authRouter); /* Обрабатываем роуты /api/removeUsers */
+
+
+// console.log(process.env.serverPort);
 
 
 const start = async () => {
     try {
-        await new mongoose.connect(config.get('dbURL')); /* Обращаемся к MongoDB */
+        await new mongoose.connect(process.env.dbURL); /* Обращаемся к MongoDB */
 
         app.listen(PORT, () => {
             console.log('Server started on port: ', PORT); /* Слушаем сервер на нужном порту */
