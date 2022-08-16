@@ -313,7 +313,7 @@ authRouter.post('/restore',
             user.restoreLink = restoreLink;
             await user.save(); /* Сохраним пользовтеля */
 
-            setTimeout(async () => {
+            setTimeout(async () => { /* Сотрем код смены пароля пользовтеля */
                 user.restoreLink = '';
                 await user.save();
             }, 600000);
