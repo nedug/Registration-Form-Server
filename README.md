@@ -4,19 +4,24 @@
 
 * User registration on MongoDB
 * User Login + JWT Token
+* Use real email with link confirmation
 * User Profile
 * Create notes
 * Change password
 * Remove user
+* Find all users
+* Remove all users
+* Restore Password
 
 ***
 
 ```
 Technologies and libraries in development:
 - Node.js
-- Express
+- Express + express-validator
 - MongoDB + mongoose
 - jsonwebtoken + bcryptjs
+- nodemailer
 - nodemon
 - deploy on HEROKU cloud
 ```
