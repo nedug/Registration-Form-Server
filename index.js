@@ -2,9 +2,6 @@ import mongoose from 'mongoose';
 import express from 'express';
 import { authRouter } from './routes/auth.routes.js';
 import cors from 'cors';
-// import { config } from 'dotenv';
-
-// const startConfig = config();
 
 
 const app = express(); /* Создаем приложение */
@@ -20,9 +17,6 @@ app.use('/api/delete', authRouter); /* Обрабатываем роуты /api/
 app.use('/api/notes', authRouter); /* Обрабатываем роуты /api/notes */
 app.use('/api/users', authRouter); /* Обрабатываем роуты /api/users */
 app.use('/api/removeUsers', authRouter); /* Обрабатываем роуты /api/removeUsers */
-
-
-// console.log(process.env.serverPort);
 
 
 const start = async () => {
