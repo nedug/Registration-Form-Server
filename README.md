@@ -5,7 +5,7 @@
 * User registration on MongoDB
 * User Login + JWT Token
 * Use real email with link confirmation
-* User Profile
+* User Profile + Remember Me
 * Create notes
 * Change password
 * Remove user
