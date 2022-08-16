@@ -38,14 +38,14 @@ class MailService {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to,
-            subject: 'Confirmation code',
+            subject: 'Confirmation code (available for 10 minutes)',
             text: '',
             html:
                 `
                     <div>
-                        <h1>Your password recovery confirmation code:</h1>
-                        <div>${code}</div>
-                    </div>
+                        <h1>Your password recovery confirmation code (available for 10 minutes):</h1>
+                        <div>${code}</div> 
+                  </div>
                 `,
         });
     }

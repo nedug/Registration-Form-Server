@@ -313,6 +313,11 @@ authRouter.post('/restore',
             user.restoreLink = restoreLink;
             await user.save(); /* Сохраним пользовтеля */
 
+            setTimeout(async () => {
+                user.restoreLink = '';
+                await user.save();
+            }, 600000);
+
             await mailService.sendAConfirmationCode(email, `${restoreLink}`);
 
 
