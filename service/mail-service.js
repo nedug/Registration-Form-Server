@@ -1,7 +1,9 @@
 import nodemailer from 'nodemailer';
-import { config } from 'dotenv';
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-const startConfig = config();
+// import { config } from 'dotenv';
+// const startConfig = config();
 
 
 class MailService {
