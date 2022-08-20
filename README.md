@@ -28,7 +28,7 @@ Technologies and libraries in development:
 
 ***
 
-[Demo version on Github Pages](https://nedug.github.io/Mern-cloud-disk-Client/)
+[Demo version on Github Pages](https://nedug.github.io/Registration-Form-Client/)
 
 [Code Frontend Part](https://github.com/nedug/Mern-cloud-disk-Client)
 
